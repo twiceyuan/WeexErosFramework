@@ -1,5 +1,7 @@
 package com.benmu.framework.adapter.router;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,8 +21,12 @@ import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WebViewParamBean;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.SimpleJSCallback;
+import com.twiceyuan.permissionhandler.PermissionsKt;
 
 import java.util.Map;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Carry on 2017/8/21.
@@ -177,10 +183,22 @@ public class DefaultRouterAdapter {
         }
     }
 
-    private void callPhone(String finalPhone, Context context) {
-        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +
-                finalPhone));
-        context.startActivity(dialIntent);
+    private void callPhone(final String finalPhone, Context context) {
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1<Boolean, Unit>() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public Unit invoke(Boolean aBoolean) {
+                    if (aBoolean) {
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + finalPhone));
+                        activity.startActivity(intent);
+                    }
+                    return Unit.INSTANCE;
+                }
+            });
+        }
     }
 
     public void toWebView(Context context, String params) {
