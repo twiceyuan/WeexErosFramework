@@ -21,12 +21,11 @@ import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WebViewParamBean;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.SimpleJSCallback;
+import com.twiceyuan.permissionhandler.Function1;
 import com.twiceyuan.permissionhandler.PermissionsKt;
 
 import java.util.Map;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Carry on 2017/8/21.
@@ -39,25 +38,38 @@ public class DefaultRouterAdapter {
     private DefaultRouterAdapter() {
     }
 
+    public static DefaultRouterAdapter getInstance() {
+        return mInstance;
+    }
 
+    public static boolean refresh(Context context) {
+        if (context instanceof AbstractWeexActivity) {
+            ((AbstractWeexActivity) context).refresh();
+            return true;
+        }
+        return false;
+    }
 
+    public static boolean finish(Context context) {
+        if (context instanceof AbstractWeexActivity) {
+            ((AbstractWeexActivity) context).finish();
+            return true;
+        }
+        return false;
+    }
 
-    public String getPageCategory(Context context){
-        if(TextUtils.isEmpty(mApplicationId)){
-            mApplicationId=context.getApplicationInfo().packageName;
+    public String getPageCategory(Context context) {
+        if (TextUtils.isEmpty(mApplicationId)) {
+            mApplicationId = context.getApplicationInfo().packageName;
         }
         return mApplicationId + ".categoty.page";
     }
 
-    public String getWebViewCategory(Context context){
-        if(TextUtils.isEmpty(mApplicationId)){
-            mApplicationId=context.getApplicationInfo().packageName;
+    public String getWebViewCategory(Context context) {
+        if (TextUtils.isEmpty(mApplicationId)) {
+            mApplicationId = context.getApplicationInfo().packageName;
         }
-        return mApplicationId+".category.web";
-    }
-
-    public static DefaultRouterAdapter getInstance() {
-        return mInstance;
+        return mApplicationId + ".category.web";
     }
 
     public boolean open(Context context, String params, JSCallback jsCallback) {
@@ -135,27 +147,6 @@ public class DefaultRouterAdapter {
         return null;
     }
 
-    public static boolean refresh(Context context) {
-        if (context instanceof AbstractWeexActivity) {
-            ((AbstractWeexActivity) context).refresh();
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean finish(Context context) {
-        if (context instanceof AbstractWeexActivity) {
-            ((AbstractWeexActivity) context).finish();
-            return true;
-        }
-        return false;
-    }
-
-    public static class Model {
-        public String to;
-        public boolean tip;
-    }
-
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         CallPhoneBean callPhone = null;
@@ -186,16 +177,15 @@ public class DefaultRouterAdapter {
     private void callPhone(final String finalPhone, Context context) {
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
-            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1<Boolean, Unit>() {
+            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1() {
                 @SuppressLint("MissingPermission")
                 @Override
-                public Unit invoke(Boolean aBoolean) {
-                    if (aBoolean) {
+                public void invoke(Object aBoolean) {
+                    if (aBoolean == Boolean.TRUE) {
                         Intent intent = new Intent(Intent.ACTION_CALL);
                         intent.setData(Uri.parse("tel:" + finalPhone));
                         activity.startActivity(intent);
                     }
-                    return Unit.INSTANCE;
                 }
             });
         }
@@ -242,5 +232,10 @@ public class DefaultRouterAdapter {
         intent.setData(parse);
         context.startActivity(intent);
         return true;
+    }
+
+    public static class Model {
+        public String  to;
+        public boolean tip;
     }
 }
