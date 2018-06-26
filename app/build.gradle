@@ -26,5 +26,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
     testCompile 'junit:junit:4.12'
     compile project(':eros-framework')
-    //     compile 'com.github.twiceyuan:WeexErosFramework:1.0.4-fork'
+//    compile 'com.github.twiceyuan:WeexErosFramework:1.0.4-fork'
 }

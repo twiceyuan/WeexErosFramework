@@ -60,5 +60,4 @@ dependencies {
         exclude group: 'com.android.support'
     })
     compile 'com.github.bmfe:eros-nexus:1.0.3'
-    compile project(':permissionhandler')
 }

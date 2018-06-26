@@ -1,4 +1,4 @@
-package com.twiceyuan.permissionhandler;
+package com.benmu.framework.utils.permissions;
 
 
 import android.app.Activity;
@@ -10,24 +10,24 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PermissionsKt {
-    
-    public static final  String        permissionRequestTag  = "permissionRequestTag";
-    
-    private static final AtomicInteger permissionRequestCode = new AtomicInteger(1);
-    
-    private static final HashMap       requestMap            = new HashMap();
 
-    
+    public static final String permissionRequestTag = "permissionRequestTag";
+
+    private static final AtomicInteger permissionRequestCode = new AtomicInteger(1);
+
+    private static final HashMap<Integer, Function1<Boolean>> requestMap = new HashMap<>();
+
+
     public static final AtomicInteger getPermissionRequestCode() {
         return permissionRequestCode;
     }
 
-    
+
     public static final HashMap getRequestMap() {
         return requestMap;
     }
 
-    public static final void requestPermissionsWithCallback( Activity $receiver,  String[] permissions,  Function1 callback) {
+    public static final void requestPermissionsWithCallback(Activity $receiver, String[] permissions, Function1<Boolean> callback) {
         boolean isAllGranted = true;
         String[] $receiver$iv = permissions;
         int var5 = permissions.length;
@@ -46,7 +46,7 @@ public class PermissionsKt {
         }
     }
 
-    public static final void requestPermissionsWithCallback( Activity $receiver, int requestCode,  String[] permissions,  Function1 callback) {
+    public static final void requestPermissionsWithCallback(Activity $receiver, int requestCode, String[] permissions, Function1 callback) {
         Map var4 = (Map) requestMap;
         Integer var5 = requestCode;
         var4.put(var5, callback);

@@ -19,10 +19,10 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.CallPhoneBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WebViewParamBean;
+import com.benmu.framework.utils.permissions.Function1;
+import com.benmu.framework.utils.permissions.PermissionsKt;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.SimpleJSCallback;
-import com.twiceyuan.permissionhandler.Function1;
-import com.twiceyuan.permissionhandler.PermissionsKt;
 
 import java.util.Map;
 
@@ -177,11 +177,11 @@ public class DefaultRouterAdapter {
     private void callPhone(final String finalPhone, Context context) {
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
-            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1() {
+            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1<Boolean>() {
                 @SuppressLint("MissingPermission")
                 @Override
-                public void invoke(Object aBoolean) {
-                    if (aBoolean == Boolean.TRUE) {
+                public void invoke(Boolean isGranted) {
+                    if (isGranted) {
                         Intent intent = new Intent(Intent.ACTION_CALL);
                         intent.setData(Uri.parse("tel:" + finalPhone));
                         activity.startActivity(intent);

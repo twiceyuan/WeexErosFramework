@@ -1,4 +1,4 @@
-package com.twiceyuan.permissionhandler;
+package com.benmu.framework.utils.permissions;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -68,7 +68,7 @@ public final class PermissionHolderFragment extends Fragment {
     }
 
     private final void onResult(boolean isAllGranted) {
-        Function1 var10000 = (Function1) PermissionsKt.getRequestMap().get(this.getArguments().getInt("requestCode"));
+        Function1<Boolean> var10000 = (Function1<Boolean>) PermissionsKt.getRequestMap().get(this.getArguments().getInt("requestCode"));
         if (var10000 != null) {
             Function1 var2 = var10000;
             var2.invoke(isAllGranted);
