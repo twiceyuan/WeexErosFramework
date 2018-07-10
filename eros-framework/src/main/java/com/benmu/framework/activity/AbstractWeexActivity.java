@@ -1,33 +1,9 @@
 package com.benmu.framework.activity;
 
-import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.BuildConfig;
-import com.benmu.framework.adapter.router.RouterTracker;
-import com.benmu.framework.constant.Constant;
-import com.benmu.framework.constant.WXConstant;
-import com.benmu.framework.constant.WXEventCenter;
-import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.PermissionManager;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
-import com.benmu.framework.model.AxiosResultBean;
-import com.benmu.framework.model.UploadResultBean;
-import com.benmu.framework.model.WeexEventBean;
-import com.benmu.framework.utils.DebugableUtil;
-import com.benmu.framework.utils.WXAnalyzerDelegate;
-import com.benmu.widget.utils.ColorUtils;
-import com.benmu.widget.view.DebugErrorDialog;
-import com.benmu.widget.view.loading.LoadingDialog;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -40,7 +16,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -52,19 +27,38 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.BuildConfig;
 import com.benmu.framework.R;
+import com.benmu.framework.adapter.router.RouterTracker;
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
+import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
+import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.PersistentManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
+import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.UploadImageBean;
+import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.model.WeexEventBean;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.InsertEnvUtil;
+import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.framework.utils.WXCommonUtil;
+import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
+import com.benmu.widget.view.DebugErrorDialog;
+import com.benmu.widget.view.loading.LoadingDialog;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.util.BitmapUtil;
@@ -73,7 +67,6 @@ import com.taobao.weex.RenderContainer;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXRenderStrategy;
 
 import org.json.JSONException;
@@ -120,7 +113,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private Handler mHandler = new Handler(this);
     private long mLastTime, mCurTime; // 调试按钮点击时间
     private ImagePicker imagePicker;
-    private BroadcastReceiver mReloadReceiver;
+
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
 
     @Override
@@ -147,14 +140,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         synRouterStack();
         initDebug();
         imagePicker = ImagePicker.getInstance();
-        mReloadReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                renderPage();
-            }
-        };
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
-                IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
+
         mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
         mWxAnalyzerDelegate.onCreate();
     }
@@ -237,10 +223,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         View child = View.inflate(this, layoutResID, null);
         rl_root.addView(child, params);
+        setContentView(mRootView);
         StatusBarManager.setHeaderBg(mRouterParam, this);
         StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
         setNavigationBar();
-        setContentView(mRootView);
     }
 
     public View getRootView() {
