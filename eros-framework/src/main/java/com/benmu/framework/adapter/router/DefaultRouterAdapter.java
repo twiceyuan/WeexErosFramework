@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
@@ -22,6 +23,7 @@ import com.benmu.framework.model.WebViewParamBean;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.SimpleJSCallback;
 import com.twiceyuan.permissionx.PermissionX;
+import com.twiceyuan.permissionx.functions.PermissionOnDenied;
 import com.twiceyuan.permissionx.functions.PermissionOnGranted;
 
 import java.util.Map;
@@ -174,15 +176,13 @@ public class DefaultRouterAdapter {
         }
     }
 
-    private void callPhone(final String finalPhone, Context context) {
+    private void callPhone(final String finalPhone, final Context context) {
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
 
             PermissionX.request(activity, new String[]{
                     Manifest.permission.CALL_PHONE,
                     Manifest.permission.READ_CALL_LOG,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.PROCESS_OUTGOING_CALLS,
             }).onGranted(new PermissionOnGranted() {
                 @SuppressLint("MissingPermission")
                 @Override
@@ -190,6 +190,11 @@ public class DefaultRouterAdapter {
                     Intent intent = new Intent(Intent.ACTION_CALL);
                     intent.setData(Uri.parse("tel:" + finalPhone));
                     activity.startActivity(intent);
+                }
+            }).onDenied(new PermissionOnDenied() {
+                @Override
+                public void onAnyDenied() {
+                    Toast.makeText(context, "权限被拒绝", Toast.LENGTH_SHORT).show();
                 }
             });
         }
