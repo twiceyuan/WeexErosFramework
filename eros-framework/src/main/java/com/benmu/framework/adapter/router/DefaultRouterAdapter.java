@@ -177,7 +177,12 @@ public class DefaultRouterAdapter {
     private void callPhone(final String finalPhone, Context context) {
         if (context instanceof Activity) {
             final Activity activity = (Activity) context;
-            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{Manifest.permission.CALL_PHONE}, new Function1<Boolean>() {
+            PermissionsKt.requestPermissionsWithCallback(activity, new String[]{
+                    Manifest.permission.CALL_PHONE,
+                    Manifest.permission.READ_CALL_LOG,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.PROCESS_OUTGOING_CALLS,
+            }, new Function1<Boolean>() {
                 @SuppressLint("MissingPermission")
                 @Override
                 public void invoke(Boolean isGranted) {
