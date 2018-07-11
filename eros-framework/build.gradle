@@ -58,7 +58,7 @@ dependencies {
     compile('com.github.niorgai:StatusBarCompat:2.1.4', {
         exclude group: 'com.android.support'
     })
-    compile 'com.github.bmfe:eros-nexus:1.0.3'
+    compile 'com.github.bmfe:eros-nexus:1.0.5'
     compile('com.github.twiceyuan.PermissionX:permissionx:0.2-alpha') {
         exclude group: 'com.android.support'
     }
