@@ -183,6 +183,7 @@ public class DefaultRouterAdapter {
             PermissionX.request(activity, new String[]{
                     Manifest.permission.CALL_PHONE,
                     Manifest.permission.READ_CALL_LOG,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             }).onGranted(new PermissionOnGranted() {
                 @SuppressLint("MissingPermission")
                 @Override
