@@ -183,7 +183,7 @@ public class DefaultRouterAdapter {
             PermissionX.request(activity, new String[]{
                     Manifest.permission.CALL_PHONE,
                     Manifest.permission.READ_CALL_LOG,
-                    Manifest.permission.READ_SMS,
+                    Manifest.permission.SEND_SMS,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.RECORD_AUDIO
             }).onGranted(new PermissionOnGranted() {
